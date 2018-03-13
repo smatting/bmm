@@ -1,7 +1,5 @@
 import numpy as np
 from scipy.stats import beta
-from scipy.stats import bernoulli
-
 
 # Constants:
 # D - dimension of data points
@@ -13,7 +11,7 @@ from scipy.stats import bernoulli
 # j - indexes H
 #
 # Input:
-#   v - input data, shape =(N, D)
+#   v - input data, shape=(N, D)
 #
 # Model parameters(theta):
 #   * q[i,j]  = p(v_i = 1 | h = j)
@@ -22,6 +20,7 @@ from scipy.stats import bernoulli
 #   * q_h - component distribution
 #     q_h[j] = p(h = j)
 #     q_h.shape =(H,)
+
 
 def lhood_cond_h(v, q):
     '''
@@ -148,14 +147,6 @@ def em_runs(v, n_runs=30, **kwargs):
     return params[i]
 
 
-def samples(n, q, q_h, seed=3):
-    np.random.seed(seed)
-    j = np.random.choice(len(q_h), size=n, p=q_h)
-    p = q[:, j].T
-    samples = bernoulli.rvs(p)
-    return samples
-
-
 class BMM():
     def __init__(self,
                  n_comp=2,
@@ -197,23 +188,3 @@ class BMM():
     def likelihood(self, X):
         lh = lhood(X, q=self.q_, q_h=self.q_h_)
         return lh
-
-
-def main():
-    n = 5000
-    q = np.array([[0.3, 0.9],
-                  [0.8, 0.1],
-                  [0.2, 0.6]])
-    q_h = np.array([0.2, 0.8])
-    print(q)
-    print(q_h)
-    v = samples(n, q, q_h)
-
-    bmm = BMM(n_comp=2, n_runs=10, thresh=1e-5)
-    bmm.fit(v)
-    print(bmm.q_)
-    print(bmm.q_h_)
-
-
-if __name__ == '__main__':
-    main()
