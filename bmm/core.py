@@ -164,12 +164,12 @@ class BMM():
                          n_runs=self.n_runs,
                          n_comp=self.n_comp,
                          n_iter=self.n_iter)
-        self.q_ = q
-        self.q_h_ = q_h
+        self.q = q
+        self.qh = q_h
         return self
 
     def predict_proba(self, X):
-        y_prob = prob_h_cond_v(v=X, q=self.q_, q_h=self.q_h_)
+        y_prob = prob_h_cond_v(v=X, q=self.q, q_h=self.qh)
         return y_prob
 
     def predict(self, X):
@@ -181,10 +181,10 @@ class BMM():
         '''
         log likelihood
         '''
-        lh = lhood(X, q=self.q_, q_h=self.q_h_)
+        lh = lhood(X, q=self.q, q_h=self.qh)
         lhs = np.log(lh).sum()
         return lhs
 
     def likelihood(self, X):
-        lh = lhood(X, q=self.q_, q_h=self.q_h_)
+        lh = lhood(X, q=self.q, q_h=self.qh)
         return lh
